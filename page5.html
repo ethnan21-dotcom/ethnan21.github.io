@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glitchwood - JungleDate</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="fade-in-page page5-body">
+
+    <svg width="0" height="0" class="svg-clip">
+        <defs>
+            <clipPath id="heart-clip" clipPathUnits="objectBoundingBox">
+                <path d="M0.5,0.9 C0.5,0.9 0,0.6 0,0.3 C0,0.1 0.2,0 0.35,0 C0.45,0 0.5,0.1 0.5,0.1 C0.5,0.1 0.55,0 0.65,0 C0.8,0 1,0.1 1,0.3 C1,0.6 0.5,0.9 0.5,0.9 Z" />
+            </clipPath>
+        </defs>
+    </svg>
+
+    <div class="bg-image page5-bg"></div>
+
+    <div class="frame">
+        <img src="media/jungledate.png" class="full-frame-img" alt="JungleDate Environment">
+        
+        <div id="radar-screen" class="glass-panel centered-panel active-screen">
+            <div class="floating-hearts">
+                <i></i><i></i><i></i><i></i><i></i>
+                <i></i><i></i><i></i><i></i><i></i>
+                <i></i><i></i><i></i><i></i><i></i>
+            </div>
+            
+            <div style="position: relative; z-index: 2;">
+                <h2 class="jungle-title">JungleDate</h2>
+                <p class="subtitle">Set your Jungle Radar. I am looking to match with:</p>
+                <div class="radar-options">
+                    <button class="choice-btn radar-btn" data-gender="female">EXPLORERS (Women)</button>
+                    <button class="choice-btn radar-btn" data-gender="male">RANGERS (Men)</button>
+                    <button class="choice-btn radar-btn" data-gender="random">RANDOM</button>
+                </div>
+            </div>
+        </div>
+        
+            <div id="loading-screen" class="glass-panel centered-panel">
+            <h2 class="match-title pulse-text" style="color: #4ade80; text-shadow: 0 0 20px rgba(74, 222, 128, 0.6);">FINDING A MATCH...</h2>
+            <div style="font-size: 50px; animation: spin 2s linear infinite;">📡</div>
+        </div>
+
+
+
+        
+        <div id="match-screen" class="glass-panel centered-panel">
+            <h2 class="match-title">IT'S A MATCH!</h2>
+            <div class="match-avatars">
+                <div class="avatar-wrapper">
+                    <img src="media/profile.png" class="heart-avatar" alt="You">
+                    <span class="avatar-name" id="explorer-display-name">You</span>
+                </div>
+                <div class="match-spark">💖</div>
+                <div class="avatar-wrapper">
+                    <img src="" id="match-scammer-img" class="heart-avatar" alt="Alex">
+                    <span class="avatar-name">Alex</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="chat-screen" class="glass-panel full-panel">
+            
+            <div class="chat-header">
+                <img src="" id="chat-scammer-img" class="chat-header-avatar" alt="Alex">
+                <div class="chat-header-info">
+                    <strong>Alex</strong>
+                    <span class="status-dot">🟢 Online</span>
+                </div>
+            </div>
+
+            <div class="chat-history" id="chat-history">
+                <p class="system-msg">You matched with Alex today.</p>
+                </div>
+
+            <div class="chat-choices" id="chat-choices">
+                </div>
+            
+        </div>
+
+        <div id="byte-hint-ui" class="byte-overlay-ui">
+            <div class="byte-profile">
+                <img src="media/Byte/neutral.png" alt="Byte">
+            </div>
+            <div class="byte-speech-bubble">
+                <h4 class="char-name" id="byte-hint-title">BYTE THE JUNGLEKEEPER</h4>
+                <p id="byte-hint-text" class="char-text"></p>
+                <span class="click-prompt show">Click to dismiss</span>
+            </div>
+        </div>
+
+        <div id="warning-overlay">
+            <div class="warning-box">
+                <h2 id="warning-title">WARNING: COMPROMISED</h2>
+                <p id="warning-text"></p>
+                <button id="try-again-btn" class="action-btn block-btn">TRY AGAIN</button>
+            </div>
+        </div>
+
+        <div id="victory-overlay">
+            <h1 class="victory-title">TRIAL COMPLETE</h1>
+            <p class="victory-subtitle">Jungle Key Fragment 3/3 Acquired</p>
+        </div>
+        <img src="media/key/key3.png" id="jungle-key-3" alt="Key Fragment 3">
+        <img src="media/Byte/neutral.png" id="byte-character" alt="Byte">
+        <div id="dialogue-box">
+            <h3 class="char-name">Byte the JungleKeeper</h3>
+            <p class="char-text" id="typewriter-text"></p>
+            <span class="click-prompt" id="click-prompt">Click to continue...</span>
+        </div>
+
+        
+    <script src="page5.js"></script>
+    <script src="audio.js"></script>
+</body>
+</html>

@@ -1,0 +1,2181 @@
+@font-face {
+    font-family: 'CaslonAntique';
+    src: url('fonts/CaslonAntique-Italic.ttf') ;
+    font-weight: normal;
+    font-style: italic;
+}
+
+.char-name, .map-click-hint {
+    font-family: 'CaslonAntique', serif;
+    letter-spacing: 1px;
+}
+
+html,body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: black;
+    width: 100%;
+    height: 100%;
+}
+.bg-image {
+    position: fixed;              
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    background-image: url('media/back.png'); 
+    background-size: cover;        
+    background-position: center;   
+    filter: blur(10px);
+    z-index: 0;
+}
+
+.frame {
+    width: 960px;
+    height: 540px;
+    position: relative;      
+    margin: auto;
+    top: 50%;
+    transform: translateY(-50%);  
+    z-index: 1;           
+
+}
+
+.frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+     display: block;
+} 
+
+.frame img.logo{ 
+    position: absolute;       /* position relative to .frame */
+    z-index: 3;
+    top: 100px;                /* distance from top of frame */
+    left: 348px;               /* distance from left of frame */
+
+    width: 270px;             /* size of logo */
+    height: auto;
+    opacity: 80%;
+    
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
+    animation: pulse 2s infinite;
+
+    /* Add this to show it is clickable */
+    cursor: pointer; 
+    transition: filter 0.3s ease;
+
+    /* Inset the clickable area by 15% on all sides */
+    clip-path: inset(10% 10% 10% 10%);
+
+}
+
+/* This is the magic part */
+.frame img.logo:hover {
+    animation-play-state: paused;
+    filter: drop-shadow(0 0 20px rgba(255,255,255,0.9)); /* Brightens it slightly when hovered */
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+    50% { transform: scale(1.05); filter: drop-shadow(0 0 20px rgba(255,255,255,0.7)); }
+    100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+}
+
+
+
+.instruction {
+    position: fixed;
+    top: 25px;
+    width: 100%;
+    text-align: center;
+
+    color: white;
+    font-size: 18px;
+    letter-spacing: 1px;
+    font-family: system-ui, sans-serif;
+
+    text-shadow:
+     0 2px 20px rgba(0,0,0,0.9),
+     0 2px 8px rgba(0, 0, 0, 0.6);
+
+
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards,
+               breatheText 5s ease-in-out 1.2s infinite;
+}
+
+/* Fade + move up */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Subtle breathing */
+@keyframes breatheText {
+    0%, 100% { opacity: 0.75; }
+    50% { opacity: 1; }
+}
+
+.hands{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* disables interaction */
+    z-index: 2;
+}
+
+.keypad-hitbox {
+    position: absolute;
+
+    top: 320px;   /* adjust */
+    left: 260px;  /* adjust */
+    width: 440px; /* adjust */
+    height: 140px;/* adjust */
+
+    cursor: pointer;
+    transition: transform 0.25s ease;
+}
+
+.keypad-hitbox:hover {
+    transform: scale(1.05);
+}
+
+
+:root {
+    /* RIGHT BOX SETTINGS */
+    --wrong-top: 180px;
+    --wrong-right: 250px;
+    --wrong-width: 80px;
+    --wrong-height: 130px;
+
+    /* LEFT BOX SETTINGS */
+    --wrong-left-top: 280px;
+    --wrong-left-pos: 190px; /* Renamed to 'pos' for clarity */
+    --wrong-left-width: 120px;
+    --wrong-left-height: 100px;
+}
+
+/* Base style for BOTH - No positioning here! */
+.wrong-hitbox {
+    position: absolute;
+    z-index: 4;
+    cursor: pointer;
+    /* border: 1px dashed red; */
+}
+
+/* Specific settings for the RIGHT box */
+.wrong-hitbox.right {
+    top: var(--wrong-top);
+    right: var(--wrong-right);
+    width: var(--wrong-width);
+    height: var(--wrong-height);
+}
+
+/* Specific settings for the LEFT box */
+.wrong-hitbox.left {
+    top: var(--wrong-left-top);
+    left: var(--wrong-left-pos); /* Using LEFT instead of right */
+    width: var(--wrong-left-width);
+    height: var(--wrong-left-height);
+}
+
+
+
+/* The Shake Animation */
+@keyframes shake {
+    /* Start and end at the normal center position */
+    0%, 100% { transform: translateY(-50%) translateX(0); }
+
+    /* Move left slightly */
+    25% { transform: translateY(-50%) translateX(-4px); } 
+
+    /* Move right slightly */
+    50% { transform: translateY(-50%) translateX(4px); } 
+
+    /* Move left again slightly */
+    75% { transform: translateY(-50%) translateX(-4px); } 
+}
+
+.apply-shake {
+    animation: shake 0.4s ease-in-out;
+}
+
+/* Red Text State */
+.instruction.error {
+    color: red;
+    text-shadow: 
+        0 0 40px rgb(255, 255, 255), /* Soft outer glow */
+        0 0 10px rgba(255, 255, 255, 1);    /* Sharper inner glow */
+}
+
+#zoom-video {
+    /* Change from fixed to absolute */
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 5; /* Sit above the background image but below the UI if needed */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+}
+
+#zoom-video.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* A utility class to fade everything to black */
+.fade-out-screen {
+    opacity: 0 !important;
+    transition: opacity 1s ease-in-out !important;
+}
+
+
+/* PAGE 2 ONLY */
+.full-frame-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Page 2 entry animation */
+.fade-in-page {
+    animation: pageEntry 2.5s ease-out forwards;
+}
+
+@keyframes pageEntry {
+    from { 
+        opacity: 0; 
+        filter: brightness(0); /* Starts completely black */
+    }
+    to { 
+        opacity: 1; 
+        filter: brightness(1); /* Fades into full color */
+    }
+}
+
+.bg-image {
+    position: fixed;              
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 120%; /* Keeps it taller to cover any shifts */
+    background-size: cover;        
+    background-position: center;   
+    filter: blur(15px); /* Increased blur slightly for a more cinematic look */
+    z-index: 0;
+}
+
+/* Specific background for Page 2 */
+.page2-bg {
+    background-image: url('media/glitchwood.png');
+}
+
+/* Ensure the foreground image in the frame fills the space correctly */
+.full-frame-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Ensure the frame clips the 'off-stage' character */
+.frame {
+    position: relative;
+    width: 960px;
+    height: 540px;
+    overflow: hidden; 
+}
+
+#byte-character {
+    position: absolute;
+    bottom: 0;
+    left: 100%; /* Start exactly at the right edge of the frame */
+    height: 85%;
+    width: auto;
+    z-index: 25;
+    
+    /* Smooth horizontal slide */
+    transition: left 3s ease-out; 
+}
+
+/* The 'Target' position inside the frame */
+#byte-character.walk-in {
+    left: 600px; 
+    top: 150px
+}
+
+/* The vertical bobbing 'walking' animation */
+@keyframes walkBob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); } /* The lift of the step */
+}
+
+.walking-animation {
+    animation: walkBob 0.6s infinite ease-in-out;
+}
+
+/* 1. Base Dialogue Box (Hidden State) */
+#dialogue-box {
+    position: absolute;
+    bottom: 40px;
+    left: 45%;             /* FIX: Start exactly in the middle */
+    transform: translateX(-50%) translateY(20px); /* FIX: Center horizontally, push down vertically */
+    
+    width: 520px;
+    height: 140px;
+    padding: 20px;
+    
+    background: rgba(12, 24, 12, 0.92); 
+    border: 2px solid #2d5a27;
+    border-radius: 8px;
+    color: #e0eee0;
+    font-family: Arial, Helvetica, sans-serif;
+    z-index: 100;
+    
+    opacity: 0;
+    pointer-events: none; 
+    transition: all 0.6s ease-out;
+    
+    display: flex;
+    flex-direction: column;
+}
+
+/* 2. Visible State (Triggered by JS) */
+#dialogue-box.fade-in {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0); /* FIX: Keep centered, remove vertical push */
+    pointer-events: auto;
+}
+
+/* 3. Hover Interaction */
+#dialogue-box:hover {
+    transform: translateX(-50%) translateY(-5px) scale(1.02); /* FIX: Keep centered while lifting */
+    box-shadow: 0 10px 30px rgba(74, 222, 128, 0.3);
+}
+
+/* 4. Text and Prompt Styling */
+.char-name { 
+    color: #4ade80; 
+    margin: 0 0 5px 0; 
+    text-transform: uppercase; 
+    font-size: 13px;
+    letter-spacing: 2px;
+}
+
+.char-text { 
+    margin: 0; 
+    font-size: 17px; 
+    line-height: 1.5; 
+    flex-grow: 1; 
+    position: relative;
+}
+
+.click-prompt {
+    position: absolute;
+    bottom: 12px;
+    right: 15px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0;
+    color: #4ade80;
+    transition: opacity 0.5s ease;
+}
+
+.click-prompt.show {
+    opacity: 0.6;
+    animation: pulsePrompt 2s infinite;
+}
+
+@keyframes pulsePrompt {
+    0%, 100% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+/* 5. Typewriter Cursor */
+.char-text::after {
+    content: "|";
+    margin-left: 5px;
+    color: #4ade80;
+    animation: blink 0.7s infinite;
+}
+
+.char-text.done::after { display: none; }
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.choice-btn {
+    /* SWAPPED TO BLUE PALETTE */
+    background: rgba(20, 40, 80, 0.4); /* Deep ocean blue */
+    border: 1px solid #4a90e2;        /* Bright electronic blue */
+    color: #e0f0ff;                   /* Very pale blue text */
+    
+    min-width: 220px;
+    padding: 12px 20px;
+    text-align: center;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    margin: 5px 0;
+}
+
+.choice-btn:hover {
+    background: rgba(74, 144, 226, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
+    border-color: #ffffff;
+}
+
+#options-container {
+    display: none;
+    gap: 15px;         /* Space between the two buttons */
+    margin-top: 15px;
+    
+    /* 1. Use 'row' for side-by-side */
+    flex-direction: row; 
+    
+    /* 2. Shift them to the right as you requested */
+    margin-left: 40px; 
+    
+    /* 3. Keep them aligned to the start of that shift */
+    justify-content: flex-start; 
+}
+
+#options-container.show {
+    display: flex;
+}
+
+#btn-yes {
+    /* ... keep your blue styling ... */
+    
+    /* THE CENTERING FIX */
+    display: none;      /* Hidden by default */
+    margin: 10px auto;  /* Centers the button horizontally in the flex container */
+    margin-left: 150px;
+    min-width: 150px;   /* "Yes" is shorter text, so a smaller width looks better */
+}
+
+/* --- Map Container & Initial Hidden State --- */
+#map-container {
+    display: none; /* Hidden until Byte finishes talking */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.6);
+    width: 850px;
+    z-index: 150; /* Above the background, but below instructions if needed */
+    opacity: 0;
+    filter: blur(20px) brightness(2) hue-rotate(90deg);
+    transition: 
+        opacity 0.8s ease-out, 
+        transform 1.2s cubic-bezier(0.17, 0.88, 0.32, 1.28), 
+        filter 1s ease-in-out;
+}
+
+/* State for when the map pops in */
+#map-container.reveal {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    filter: blur(0px) brightness(1) hue-rotate(0deg);
+}
+
+/* --- THE FIX: The Game Map Image --- */
+#game-map {
+    width: 100% !important;
+    
+    /* This is the magic line that stops the map from collapsing to 0 height! */
+    height: auto !important; 
+    
+    object-fit: contain !important;
+    display: block !important;
+    filter: drop-shadow(0 0 20px rgba(74, 222, 128, 0.5));
+    border-radius: 12px;
+}
+
+:root {
+    /* --- APP PIN CONTROLS --- */
+    --app-size: 80px;          /* Size of the icons */
+    --app-idle-opacity: 0.4;   /* Low opacity when not hovered */
+    --app-hover-lift: -10px;   /* How high it pans up on hover */
+    --app-text-color: #ffffff; /* Jungle green text */
+    --app-transition: 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.app-pin {
+    position: absolute;
+    top: var(--top);
+    left: var(--left);
+    transform: translate(-50%, -50%); /* Centers the pin on the coordinates */
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    z-index: 210;
+    transition: transform var(--app-transition);
+}
+
+/* The Icon Style */
+.app-pin img {
+    width: var(--app-size);
+    height: var(--app-size);
+    object-fit: contain;
+    
+    /* INITIAL STATE: Greyscale and Low Opacity */
+    filter: grayscale(100%) drop-shadow(0 0 0px rgba(255,255,255,0));
+    opacity: var(--app-idle-opacity);
+    transition: all var(--app-transition);
+}
+
+/* The Text Style (Hidden by default) */
+.app-pin span {
+    /* 1. Use a negative margin to pull the text 'into' the icon's space */
+    margin-top: -5px; 
+
+    /* 2. Collapse the line-height so there's no invisible top buffer */
+    line-height: 1;
+
+    /* 3. Ensure the icon itself doesn't have default bottom spacing */
+    display: block;
+
+    /* ... keep your other font and color settings ... */
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    color: var(--app-text-color);
+    text-transform: none;
+    opacity: 0;
+    transition: all var(--app-transition);
+    text-shadow: 
+   
+    0px 0px 8px rgb(0, 0, 0),   /* Medium spread */
+    0px 0px 15px rgb(0, 0, 0);  /* Large soft background shadow */
+}
+
+/* --- HOVER EFFECTS --- */
+.app-pin:hover {
+    /* Pans the whole container up */
+    transform: translate(-50%, calc(-50% + var(--app-hover-lift)));
+}
+
+.app-pin:hover img {
+    opacity: 1;
+    filter: grayscale(0%) drop-shadow(0 0 15px rgba(74, 222, 128, 0.7));
+    transform: scale(1.1); /* Makes the icon grow slightly */
+
+}
+
+.app-pin:hover span {
+    opacity: 1;
+    transform: translateY(0); /* Text slides up into view */
+}
+
+/* --- Byte Map UI Layout --- */
+#byte-map-ui {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    display: flex;
+    flex-direction: row-reverse; 
+    align-items: flex-start;
+    gap: 20px;
+    z-index: 300;
+    
+    /* Fade/Slide Entrance */
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: all 0.6s ease-out;
+}
+
+#byte-map-ui.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Exit Animation Class */
+#byte-map-ui.exit {
+    opacity: 0;
+    transform: translateY(-30px);
+    pointer-events: none;
+}
+
+/* The Profile Picture Frame (Bigger & Scaled Byte) */
+.byte-profile {
+    width: 80px;  /* Increased size */
+    height: 80px;
+    border: 2px solid #2d5a27;
+    border-radius: 50%;
+    overflow: hidden;
+    background: rgba(12, 24, 12, 0.95);
+    box-shadow: 0 0 20px rgba(74, 222, 128, 0.3);
+}
+
+.byte-profile img {
+    width: 160%;    /* Scale Byte up within the circle */
+    height: 160%;
+    object-fit: cover;
+    object-position: center 50%; /* Nudge focus toward his face */
+    margin-left: -30%; /* Center the over-scaled image */
+    
+}
+
+/* The Speech Bubble (Matching Page 2 Style) */
+.byte-speech-bubble {
+    background: rgba(12, 24, 12, 0.92);
+    border: 2px solid #2d5a27;
+    border-radius: 8px;
+    padding: 20px;
+    padding-bottom: 35px; /* ADDED: Creates a "safe zone" for the hint */
+    width: 320px; 
+    height: 70px;        /* CHANGED: Use a fixed height to prevent jumping */
+    position: relative;   /* ADDED: This is the anchor for the hint */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;     /* ADDED: Keeps extra text inside the box boundaries */
+}
+
+/* Page 2 Hover Effect */
+.byte-speech-bubble:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(74, 222, 128, 0.3);
+}
+
+#byte-map-text {
+    color: #e0eee0;
+    font-family: Arial, sans-serif;
+    font-size: 16px; /* Bigger text */
+    line-height: 1.5;
+    margin: 0;
+}
+
+.char-name { 
+    color: #4ade80; 
+    margin: 0 0 5px 0; 
+    text-transform: uppercase; 
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-family:Arial, Helvetica, sans-serif ;
+}
+
+.map-click-hint {
+    position: absolute;   /* ADDED: Pulls it out of the "flow" */
+    bottom: 12px;         /* ADDED: Distance from bottom edge */
+    right: 15px;          /* ADDED: Distance from right edge */
+    
+    font-size: 11px;
+    color: #4ade80;
+    text-transform: uppercase;
+    opacity: 0.6;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;            /* ADDED: Remove margin as it's now positioned manually */
+}
+
+
+.fixed-box {
+  width: 300px;
+  height: 200px;
+  
+  /* This prevents the text from spilling out or stretching the box */
+  overflow: hidden; 
+  
+  /* Optional: Adds a scrollbar ONLY if the text is too long */
+  /* overflow-y: auto; */
+  
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+/* =========================================
+   LOCKED APPS (Class Targeting)
+   ========================================= */
+
+/* 1. Add a small padlock icon to the text of ANY locked app */
+.app-pin.locked span::after {
+    content: " 🔒";
+    font-size: 10px;
+    opacity: 0.8;
+}
+
+/* 2. Stop locked apps from lifting up on hover */
+.app-pin.locked:hover {
+    transform: translate(-50%, -50%); /* Keeps it pinned to its exact spot */
+    cursor: not-allowed;              /* 'No entry' mouse cursor */
+}
+
+/* 3. Make locked apps glow RED instead of GREEN on hover */
+.app-pin.locked:hover img {
+    filter: grayscale(100%) drop-shadow(0 0 15px rgba(255, 50, 50, 0.9));
+    transform: scale(1); /* Stops the icon from growing */
+}
+
+/* =========================================
+   UPDATED POP-UP (Smaller, Top of Screen)
+   ========================================= */
+#not-ready-popup {
+    position: fixed;
+    top: 70px;                   /* Moved to the top */
+    left: 50%;
+    transform: translateX(-50%); /* Centers it horizontally */
+    z-index: 1000;
+    
+    font-family: 'CaslonAntique', serif; 
+    font-size: 28px;             /* Made it smaller */
+    font-weight: bold;
+    font-style: italic;
+    color: #ff3333; 
+    text-align: center;
+    text-shadow: 
+    0 0 10px rgba(0, 0, 0, 1),
+    0 0 10px rgba(0, 0, 0, 1);
+
+    pointer-events: none; 
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* 1. Simple text shake when it appears */
+#not-ready-popup.show-popup {
+    opacity: 1;
+    animation: simpleTextShake 0.4s ease-in-out; 
+}
+
+@keyframes simpleTextShake {
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    25% { transform: translateX(-52%) rotate(-2deg); }
+    50% { transform: translateX(-48%) rotate(2deg); }
+    75% { transform: translateX(-52%) rotate(-2deg); }
+}
+
+/* =========================================
+   FRAME SHAKE ANIMATION
+   ========================================= */
+/* 2. We use margins so it doesn't mess up your existing layout transforms! */
+@keyframes frameShake {
+    0%, 100% { margin-left: 0px; margin-top: 0px; }
+    20% { margin-left: -6px; margin-top: 2px; }
+    40% { margin-left: 6px; margin-top: -2px; }
+    60% { margin-left: -6px; margin-top: 2px; }
+    80% { margin-left: 6px; margin-top: -2px; }
+}
+
+.shake-frame {
+    animation: frameShake 0.35s ease-in-out;
+}
+
+
+
+
+
+
+/* --- THE CINEMATIC ZOOM STATE --- */
+#map-container.map-zoom-transition {
+    /* Targets the specific coordinates of your JungleMail pin */
+    transform-origin: 21% 45%; 
+    transform: scale(4) !important; 
+    filter: blur(4px) brightness(1.2) !important;
+    transition: transform 2.5s cubic-bezier(0.25, 1, 0.5, 1), 
+                filter 2s ease-in !important;
+    pointer-events: none;
+}
+
+/* --- THE DIGITAL FOG OVERLAY --- */
+#transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    /* White fog vignette - doesn't rely on an image file */
+    background: radial-gradient(circle, rgba(255,255,255,0) 20%, rgba(200,255,200,0.8) 100%);
+    background-color: rgba(255, 255, 255, 0); 
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    mix-blend-mode: screen; 
+}
+
+/* Fog animation class triggered by JS */
+.clouds-rush {
+    animation: fogFadeIn 2s forwards ease-in-out;
+}
+
+@keyframes fogFadeIn {
+    0% { 
+        opacity: 0; 
+        background-color: rgba(255, 255, 255, 0);
+        transform: scale(1.1); 
+    }
+    100% { 
+        opacity: 1; 
+        background-color: rgba(255, 255, 255, 1); /* Fades into a completely solid white screen */
+        transform: scale(1); 
+    }
+}
+
+
+/* =========================================
+   PAGE 3: JUNGLEMAIL TRIAL
+   ========================================= */
+
+/* The Blurred Background */
+.page3-bg {
+    background-image: url('media/junglemail.png');
+}
+
+/* The Container for the Webmail UI */
+#junglemail-app-container {
+    /* 1. Snap it to the edges to fill 100% of the frame */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* 2. Base Color & Transparency (Adjust 0.85 to make it darker/lighter) */
+    background: rgba(12, 24, 12, 0.85); 
+    
+    /* 3. THIS IS YOUR BLUR KNOB for the background inside the frame */
+    backdrop-filter: blur(10px); 
+    
+    z-index: 10;
+    display: flex; 
+    overflow: hidden;
+}
+
+/* =========================================
+   PAGE 3: JUNGLEMAIL INBOX LAYOUT
+   ========================================= */
+
+/* The Container */
+#junglemail-app-container {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(12, 24, 12, 0.85); 
+    backdrop-filter: blur(10px); 
+    z-index: 10;
+    display: flex; /* Creates the two-pane layout */
+    font-family: Arial, Helvetica, sans-serif;
+    color: #e0eee0;
+}
+
+/* --- Left Sidebar (Inbox) --- */
+#email-sidebar {
+    width: 32%;
+    border-right: 2px solid #2d5a27;
+    background: rgba(5, 10, 5, 0.6);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    padding: 20px;
+    font-weight: bold;
+    color: #4ade80;
+    letter-spacing: 2px;
+    border-bottom: 2px solid #2d5a27;
+    font-size: 14px;
+}
+
+/* --- FIX 1: Transparent Border Prevents Jumping --- */
+.email-item {
+    padding: 20px;
+    border-bottom: 1px solid rgba(45, 90, 39, 0.5);
+    border-left: 4px solid transparent; /* Keeps the spacing identical */
+    box-sizing: border-box; /* Stops padding from shifting width */
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease; /* Only animates color, not size */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.email-item:hover { background: rgba(74, 222, 128, 0.1); }
+.email-item.active { background: rgba(74, 222, 128, 0.2); border-left: 4px solid #4ade80; }
+.email-item.unread .sender { font-weight: bold; color: #ffffff; }
+
+.sender { font-size: 15px; color: #a0c0a0; }
+.subject { font-size: 13px; color: #80a080; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* --- FIX 2: Proper Fade-In Animation --- */
+.email-body { 
+    display: none; 
+}
+.email-body.active-email { 
+    display: block; 
+    animation: cleanFade 0.3s ease-in-out forwards; 
+}
+
+@keyframes cleanFade {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Right Pane (Reading Area) --- */
+#email-main {
+    width: 68%;
+    padding: 30px;
+    overflow-y: auto; /* Allows scrolling */
+    position: relative;
+}
+
+/* Custom Jungle Scrollbar */
+#email-main::-webkit-scrollbar { width: 8px; }
+#email-main::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+#email-main::-webkit-scrollbar-thumb { background: #2d5a27; border-radius: 4px; }
+#email-main::-webkit-scrollbar-thumb:hover { background: #4ade80; }
+
+.email-body { display: none; animation: fadeIn 0.4s ease; }
+.email-body.active-email { display: block; }
+
+.email-header {
+    border-bottom: 1px solid #2d5a27;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.email-row { margin-bottom: 10px; }
+.label { color: #80a080; margin-right: 10px; width: 60px; display: inline-block; }
+
+.email-content-text { font-size: 16px; line-height: 1.6; color: #d0e0d0; margin-bottom: 40px; }
+
+/* --- Interactive "Suspect" Text --- */
+.suspect {
+    font-weight: bold;
+    color: #ffffff;
+    border-bottom: 1px dashed #4ade80;
+    cursor: help;
+    transition: all 0.3s ease;
+}
+
+.suspect:hover {
+    color: #4ade80;
+    text-shadow: 0 0 10px rgba(74, 222, 128, 0.8);
+    background: rgba(74, 222, 128, 0.1);
+}
+
+.fake-link, .real-link { color: #4a90e2; border-bottom: none; text-decoration: underline; cursor: pointer; }
+.fake-link:hover, .real-link:hover { color: #7ab5ff; text-shadow: 0 0 10px rgba(74, 144, 226, 0.8); }
+
+/* --- Action Buttons --- */
+.email-actions { display: flex; gap: 20px; justify-content: flex-start; margin-top: 30px; }
+
+.action-btn {
+    padding: 12px 30px; font-weight: bold; border-radius: 4px; cursor: pointer;
+    font-family: Arial, sans-serif; font-size: 14px; letter-spacing: 1px; transition: all 0.2s;
+}
+
+.block-btn { background: rgba(255, 50, 50, 0.1); border: 1px solid #ff3333; color: #ffcccc; }
+.block-btn:hover { background: rgba(255, 50, 50, 0.4); box-shadow: 0 0 15px rgba(255, 50, 50, 0.5); }
+
+.proceed-btn { background: rgba(74, 222, 128, 0.1); border: 1px solid #4ade80; color: #ccffcc; }
+.proceed-btn:hover { background: rgba(74, 222, 128, 0.4); box-shadow: 0 0 15px rgba(74, 222, 128, 0.5); }
+
+/* =========================================
+   PAGE 3 ONLY: BYTE REFINEMENTS
+   ========================================= */
+
+/* This ONLY triggers if the body has the .page3-body class */
+.page3-body #byte-map-ui {
+    top: auto;        /* Clears the top: 30px from Page 2 */
+    bottom: 50px;     /* Places him at the bottom instead */
+    right: 40px;
+    align-items: flex-end;
+    transform: translateY(30px); /* Slides UP instead of DOWN */
+}
+
+/* =========================================
+   PAGE 3 ONLY: BYTE REFINEMENTS
+   ========================================= */
+
+/* This ONLY triggers if the body has the .page3-body class */
+.page3-body #byte-map-ui {
+    top: auto;        /* Clears the top: 30px from Page 2 */
+    bottom: 50px;     /* Places him at the bottom instead */
+    right: 40px;
+    align-items: flex-end;
+    transform: translateY(30px); /* Slides UP instead of DOWN */
+}
+
+/* Higher Blur specifically for the Email interface */
+/* Higher Blur specifically for the Email interface */
+.page3-body .byte-speech-bubble {
+    background: rgba(12, 24, 12, 0.9); 
+    backdrop-filter: blur(30px); /* Much heavier blur for readability */
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.9);
+    border: 2px solid #3d7a37; /* Slightly brighter border to stand out */
+    
+    /* --- THE SIZE FIX --- */
+    width: 420px;       /* Makes the box wider so words fit better horizontally */
+    height: auto;       /* Overrides Page 2's fixed height so it can grow downwards */
+    min-height: 90px;   /* Keeps it from looking too squished when there's barely any text */
+    overflow: visible;  /* Ensures no text gets trapped or chopped off */
+}
+
+/* Exit animation for Page 3 */
+.page3-body #byte-map-ui.exit {
+    opacity: 0;
+    transform: translateY(50px); /* Slides off the bottom of the screen */
+}
+
+/* Exit animation for Page 3 */
+.page3-body #byte-map-ui.exit {
+    opacity: 0;
+    transform: translateY(50px); /* Slides off the bottom of the screen */
+}
+
+/* --- Sidebar Divider --- */
+.sidebar-divider {
+    padding: 10px 20px;
+    font-size: 11px;
+    color: #4ade80;
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(45, 90, 39, 0.5);
+    letter-spacing: 2px;
+}
+
+/* --- The Home Screen View --- */
+.home-screen {
+    /* REMOVED 'display: flex' from the base class */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%; /* Fills the whole reading pane */
+    text-align: center;
+}
+
+/* ADDED THIS: Only make it a flexbox when it is the active email! */
+.home-screen.active-email {
+    display: flex;
+}
+
+.jungle-title {
+    font-size: 48px;
+    letter-spacing: 6px;
+    color: #4ade80;
+    margin: 0 0 15px 0;
+    text-shadow: 0 0 20px rgba(74, 222, 128, 0.4);
+}
+
+.jungle-subtitle {
+    font-size: 16px;
+    color: #80a080;
+    margin: 0;
+    font-style: italic;
+}
+
+/* =========================================
+   PAGE 3: FEEDBACK POPUP & STAMPS
+   ========================================= */
+
+#feedback-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 500;
+    
+    /* Centering the popup */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* Hidden by default */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+#feedback-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#feedback-popup {
+    background: rgba(12, 24, 12, 0.95);
+    border: 2px solid #4ade80;
+    border-radius: 8px;
+    width: 450px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    
+    /* Pop-in animation */
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.17, 0.88, 0.32, 1.28);
+
+    /* ADD THIS LINE TO FORCE ARIAL */
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+
+#feedback-overlay.show #feedback-popup { transform: scale(1); }
+
+#feedback-title {
+    margin-top: 0;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 22px;
+}
+
+#feedback-text {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #e0eee0;
+    margin: 20px 0 30px 0;
+}
+
+#feedback-close-btn {
+    background: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    padding: 12px 25px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+}
+
+/* --- THE RED / GREEN LOGIC --- */
+
+/* Success (Green) */
+#feedback-popup.success { border-color: #4ade80; box-shadow: 0 0 40px rgba(74, 222, 128, 0.3); }
+#feedback-popup.success #feedback-title { color: #4ade80; }
+#feedback-popup.success #feedback-close-btn { border-color: #4ade80; color: #4ade80; }
+#feedback-popup.success #feedback-close-btn:hover { background: rgba(74, 222, 128, 0.2); }
+
+/* Error (Red) */
+#feedback-popup.error { border-color: #ff4444; box-shadow: 0 0 40px rgba(255, 68, 68, 0.3); }
+#feedback-popup.error #feedback-title { color: #ff4444; }
+#feedback-popup.error #feedback-close-btn { border-color: #ff4444; color: #ff4444; }
+#feedback-popup.error #feedback-close-btn:hover { background: rgba(255, 68, 68, 0.2); }
+
+/* --- VISUAL STAMPS (Replaces buttons when resolved) --- */
+.action-stamp {
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    border: 4px solid;
+    border-radius: 8px;
+    display: inline-block;
+    opacity: 0.8;
+    margin-top: 20px;
+    pointer-events: none;
+    
+    /* Slam-down animation */
+    animation: stampIn 0.3s cubic-bezier(0.17, 0.88, 0.32, 1.28) forwards;
+}
+
+@keyframes stampIn {
+    from { transform: scale(2) rotate(-20deg); opacity: 0; }
+    to { transform: scale(1) rotate(-5deg); opacity: 0.8; }
+}
+
+.stamp-blocked { color: #ff4444; border-color: #ff4444; }
+.stamp-proceeded { color: #4ade80; border-color: #4ade80; }
+
+/* Hides the buttons once a choice is made */
+.actions-resolved .action-btn { display: none !important; }
+
+/* =========================================
+   VICTORY SEQUENCE & ANIMATIONS (PAGES 3 & 4)
+   ========================================= */
+
+#victory-overlay {
+    /* FIX 1: Changed from 'fixed' to 'absolute' to lock it inside the frame */
+    position: absolute !important; 
+    top: 0; 
+    left: 0; 
+    
+    /* FIX 2: Changed from 100vw/vh to 100% so it perfectly matches the 960x540 frame */
+    width: 100% !important; 
+    height: 100% !important; 
+    
+    background: rgba(10, 25, 10, 0.85); 
+    backdrop-filter: blur(15px);
+    z-index: 1000; 
+    opacity: 0; 
+    pointer-events: none; 
+    transition: opacity 1s ease;
+}
+
+#victory-overlay.show { opacity: 1; pointer-events: auto; }
+
+.victory-title { 
+    position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%);
+    width: 100%; text-align: center; margin: 0;
+    color: #4ade80; font-size: 60px; letter-spacing: 8px; 
+    text-shadow: 0 0 30px rgba(74, 222, 128, 0.6); 
+    font-family: Arial, Helvetica, sans-serif !important;
+    transition: opacity 1s ease; 
+}
+
+.victory-subtitle { 
+    position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
+    width: 100%; text-align: center; margin: 0;
+    color: #e0eee0; font-size: 24px; letter-spacing: 2px; font-style: italic;
+    font-family: Arial, Helvetica, sans-serif !important;
+    transition: opacity 1s ease; 
+}
+
+/* FIX 3: Changed keys to 'absolute' so they pop up in the center of the frame, not the monitor */
+#jungle-key-1, #jungle-key-2 {
+    position: absolute !important; 
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    z-index: 1001; opacity: 0; pointer-events: none;
+    transition: all 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+}
+
+#jungle-key-1.pop-in, #jungle-key-2.pop-in { 
+    opacity: 1; transform: translate(-50%, -50%) scale(2); 
+}
+
+#jungle-key-1.fade-out-key, #jungle-key-2.fade-out-key {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.1); 
+    transition: all 2s ease-in-out; 
+}
+
+/* Make sure Byte stays in front of the blur */
+.page3-body #byte-character, .page4-body #byte-character { z-index: 1002; }
+.page3-body #dialogue-box, .page4-body #dialogue-box { z-index: 1003; }
+
+#dialogue-box.victory-mode {
+    height: auto !important;
+    min-height: 190px;
+    padding-bottom: 25px;
+}
+
+/* --- UNIVERSAL MAP KEYS BASE --- */
+.key-on-map {
+    position: absolute !important;
+    width: 90px !important;  /* Made slightly bigger so they stand out */
+    height: 90px !important; 
+    object-fit: contain !important; 
+    display: block !important;      
+    z-index: 9999 !important; 
+    pointer-events: none;
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.7));
+    
+    /* Base animation settings */
+    opacity: 0;
+    transform: scale(0.5); 
+    transition: all 1.2s cubic-bezier(0.17, 0.88, 0.32, 1.28); 
+}
+
+/* The Reveal State */
+.key-on-map.show {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+}
+
+/* --- EXACT PLACEMENTS FOR THE KEYS --- */
+#map-key-fragment-1 {
+    top: 15% !important;
+    left: 3% !important;
+}
+
+#map-key-fragment-2 {
+    top: 15% !important;
+    left: 9% !important;
+}
+
+/* --- Utility Class for smoothly hiding elements --- */
+.fade-out-element {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 1s ease !important;
+}
+
+/* (Keep the rest of the CSS below this point, starting with #dialogue-box.victory-mode) */
+
+/* FIX 3: Allows the Dialogue Box to stretch to fit the input */
+#dialogue-box.victory-mode {
+    height: auto !important;
+    min-height: 190px;
+    padding-bottom: 25px;
+}
+
+/* Ensuring Byte is on top of the dark overlay */
+.page3-body #byte-character { z-index: 1002; }
+.page3-body #dialogue-box { z-index: 1003; }
+
+/* Glassmorphic Name Input */
+#name-input-container { display: none; flex-direction: column; align-items: center; margin-top: 15px; }
+#name-input-container.show { display: flex; animation: fadeIn 0.5s ease forwards; }
+#name-input-container p { color: #4ade80; font-size: 14px; margin-bottom: 10px; letter-spacing: 1px; }
+
+#explorer-name {
+    background: rgba(0, 0, 0, 0.5); border: 1px solid #4ade80; color: #fff;
+    padding: 12px 20px; border-radius: 4px; font-size: 16px; width: 280px; 
+    text-align: center; margin-bottom: 15px; outline: none; 
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.8); transition: all 0.3s;
+}
+#explorer-name:focus { border-color: #fff; box-shadow: 0 0 15px rgba(74, 222, 128, 0.4); }
+
+#confirm-name-btn { min-width: 150px; }
+
+/* --- COMPLETED APP PIN STATE --- */
+.app-pin.completed {
+    cursor: default;
+}
+.app-pin.completed:hover {
+    transform: translate(-50%, -50%); /* Stops the hover lift */
+}
+.app-pin.completed img {
+    filter: grayscale(0%) drop-shadow(0 0 10px rgba(74, 222, 128, 0.4));
+    opacity: 0.5; /* Dims it to show it's "done" */
+}
+.app-pin.completed:hover img {
+    transform: scale(1); /* Stops the icon from growing */
+}
+
+/* --- THE CINEMATIC ZOOM FOR JUNGLESOCIAL --- */
+#map-container.social-zoom-transition {
+    /* Targets the specific coordinates of your JungleGram pin! */
+    transform-origin: 52% 69%; 
+    transform: scale(4) !important; 
+    filter: blur(4px) brightness(1.2) !important;
+    transition: transform 2.5s cubic-bezier(0.25, 1, 0.5, 1), filter 2s ease-in !important;
+    pointer-events: none;
+}
+
+/* --- THE CINEMATIC ZOOM FOR JUNGLEDATE --- */
+#map-container.dating-zoom-transition {
+    /* Targets the exact coordinates of your JungleDate pin (78% 59%) */
+    transform-origin: 78% 59%; 
+    transform: scale(4) !important; 
+    filter: blur(4px) brightness(1.2) !important;
+    transition: transform 2.5s cubic-bezier(0.25, 1, 0.5, 1), filter 2s ease-in !important;
+    pointer-events: none;
+}
+
+/* =========================================
+   PAGE 4: JUNGLESOCIAL LAYOUT (UPDATED 2-COL)
+   ========================================= */
+
+.page4-bg {
+    background-image: url('media/junglesocial.png');
+}
+
+#junglesocial-app-container {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    /* FIX: Slightly darker background for less "blur" effect */
+    background: rgba(5, 15, 5, 0.9); 
+    backdrop-filter: blur(12px);
+    z-index: 10; display: flex; flex-direction: row; gap: 20px;
+    padding: 20px; box-sizing: border-box; color: #e0eee0;
+    font-family: Arial, sans-serif;
+}
+
+/* --- New Column Widths (Approx 70/30) --- */
+/* Removed .social-left-col */
+
+.social-center-col { 
+    width: 68%; /* Much wider feed */
+    overflow-y: auto; 
+    padding-right: 10px; 
+    display: flex; flex-direction: column; gap: 20px; 
+}
+
+.social-right-col { 
+    width: 30%; 
+    /* FIX: Ensure right column takes full height */
+    display: flex; 
+    flex-direction: column; 
+    height: 100%; 
+}
+
+/* Scrollbar for Feed */
+.social-center-col::-webkit-scrollbar { width: 6px; }
+.social-center-col::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+.social-center-col::-webkit-scrollbar-thumb { background: #2d5a27; border-radius: 3px; }
+
+
+/* --- Center Col (Posts) --- */
+.post-card {
+    background: rgba(15, 30, 15, 0.9); 
+    border: 1px solid rgba(45, 90, 39, 0.5);
+    border-radius: 12px; padding: 20px; transition: all 0.3s ease;
+}
+
+.post-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 15px; }
+
+/* THE FIX: Force sizes and stop flexbox from stretching them */
+.post-avatar { 
+    width: 35px !important; 
+    height: 35px !important; 
+    border-radius: 50%; 
+    border: 1px solid #2d5a27; 
+    object-fit: cover !important;
+    flex-shrink: 0 !important; 
+}
+
+.post-author { display: flex; flex-direction: column; justify-content: center; }
+.author-top-line { display: flex; align-items: center; gap: 5px; }
+.post-author strong { color: #fff; font-size: 15px; }
+.post-author .handle { font-size: 13px; color: #80a080; margin-top: 2px; }
+
+.sponsored { font-size: 10px; color: #ffaa00; border: 1px solid #ffaa00; padding: 1px 4px; border-radius: 3px; text-transform: uppercase; }
+
+/* THE FIX: Lock the verified badge size */
+.verified-badge { 
+    width: 14px !important; 
+    height: 14px !important; 
+    vertical-align: middle; 
+    transition: all 0.3s; 
+    flex-shrink: 0 !important;
+}
+
+.post-content { font-size: 15px; line-height: 1.5; margin-bottom: 15px; }
+
+/* --- Fake Unclickable Hyperlink --- */
+.fake-blue-link {
+    color: #4a90e2; /* Standard hyperlink blue */
+    text-decoration: underline;
+    pointer-events: none; /* This is the magic line: it completely disables all mouse interactions, hovering, and clicking */
+}
+
+/* THE FIX: Make sure post images scale nicely without stretching vertically */
+.post-image { 
+    width: 100% !important; 
+    height: auto !important; 
+    border-radius: 8px; 
+    margin-top: 10px; 
+    border: 1px solid rgba(45, 90, 39, 0.5); 
+}
+
+/* --- Comments Section --- */
+.comment-section { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+.comment { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; font-size: 13px; }
+
+/* THE FIX: Lock comment avatars */
+.comment img { 
+    width: 30px !important; 
+    height: 30px !important; 
+    border-radius: 50%; 
+    object-fit: cover !important;
+    flex-shrink: 0 !important;
+}
+.comment-timestamp { display: block; font-size: 11px; color: #80a080; margin-top: 3px; transition: all 0.3s; }
+.more-comments { font-size: 12px; color: #4a90e2; cursor: pointer; margin: 0; }
+
+/* --- SCAN Highlights --- */
+.suspect-red, .suspect-blue { transition: all 0.5s ease; border-radius: 3px; }
+.post-card.scanned .suspect-red { background: rgba(255, 68, 68, 0.2); color: #ffcccc; text-shadow: 0 0 8px red; padding: 0 2px; }
+.post-card.scanned .suspect-blue { background: rgba(74, 144, 226, 0.2); color: #cce0ff; text-shadow: 0 0 8px #4a90e2; padding: 0 2px; }
+.post-card.scanned .verified-badge.suspect-blue { filter: drop-shadow(0 0 8px #4a90e2); transform: scale(1.2); }
+
+/* --- Actions --- */
+.post-actions { display: flex; gap: 15px; border-top: 1px solid rgba(45, 90, 39, 0.5); padding-top: 15px; }
+
+.scan-btn { background: rgba(74, 144, 226, 0.1); border: 1px solid #4a90e2; color: #cce0ff; transition: all 0.3s ease; cursor: pointer; }
+.scan-btn:hover { background: rgba(74, 144, 226, 0.3); box-shadow: 0 0 15px rgba(74, 144, 226, 0.5); border-color: #ffffff; transform: translateY(-2px); }
+
+.flag-btn { background: rgba(255, 50, 50, 0.1); border: 1px solid #ff3333; color: #ffcccc; transition: all 0.3s ease; cursor: pointer; }
+.flag-btn:hover { background: rgba(255, 50, 50, 0.3); box-shadow: 0 0 15px rgba(255, 50, 50, 0.5); border-color: #ffffff; transform: translateY(-2px); }
+
+.share-btn { background: rgba(74, 222, 128, 0.1); border: 1px solid #4ade80; color: #ccffcc; transition: all 0.3s ease; cursor: pointer; }
+.share-btn:hover { background: rgba(74, 222, 128, 0.3); box-shadow: 0 0 15px rgba(74, 222, 128, 0.5); border-color: #ffffff; transform: translateY(-2px); }
+
+/* THE FIX: Lock scan icon */
+.scan-btn img { 
+    width: 14px !important; 
+    height: 14px !important; 
+    flex-shrink: 0 !important;
+}
+
+.scan-btn:hover { background: rgba(74, 144, 226, 0.3); box-shadow: 0 0 15px rgba(74, 144, 226, 0.5); }
+.flag-btn { background: rgba(255, 50, 50, 0.1); border: 1px solid #ff3333; color: #ffcccc; }
+.share-btn { background: rgba(74, 222, 128, 0.1); border: 1px solid #4ade80; color: #ccffcc; }
+
+/* --- Right Col Scanner Module (BASE: GREEN THEME) --- */
+.scanner-module {
+    background: rgba(5, 10, 5, 0.8); 
+    border: 2px solid #2d5a27; /* Starts Green */
+    border-radius: 12px;
+    padding: 20px; 
+    display: flex; flex-direction: column; align-items: center;
+    box-shadow: inset 0 0 30px rgba(74, 222, 128, 0.1); /* Starts Green */
+    flex-grow: 1; 
+    height: 100%;
+    box-sizing: border-box;
+    transition: all 0.5s ease; /* Smooth color swap */
+}
+
+.byte-scanner-img { 
+    width: 100px !important; height: auto !important; margin-bottom: 15px; 
+    filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.3)); /* Starts Green */
+    transition: all 0.5s ease;
+}
+
+.scanner-screen {
+    background: #000; 
+    border: 1px solid #2d5a27; /* Starts Green */
+    border-radius: 8px; padding: 15px; width: 100%;
+    box-sizing: border-box; flex-grow: 1; overflow-y: auto; 
+    display: flex; flex-direction: column;
+    cursor: pointer; /* Indicates you can click through the intro */
+    transition: all 0.5s ease;
+}
+
+.scanner-screen h4 { margin: 0 0 10px 0; color: #4ade80; letter-spacing: 2px; font-size: 12px; flex-shrink: 0; transition: color 0.5s ease; }
+#scanner-text { font-family: monospace; font-size: 14px; color: #e0eee0; line-height: 1.5; margin: 0; flex-grow: 1; transition: color 0.5s ease; }
+.typewriter-container { flex-grow: 1; }
+.typewriter-container::after { content: "█"; margin-left: 5px; color: #4ade80; animation: blink 0.7s infinite; }
+
+.scanner-click-prompt { 
+    font-size: 11px; text-transform: uppercase; color: #4ade80; opacity: 0; 
+    transition: opacity 0.5s ease; text-align: right; margin-top: auto; 
+    padding-top: 10px; animation: pulsePrompt 2s infinite; 
+}
+
+/* =========================================
+   SCANNER MODE (ACTIVE: BLUE THEME)
+   Triggered by JS when a Scan button is clicked
+   ========================================= */
+.scanner-module.active-scanner {
+    border-color: #4a90e2;
+    box-shadow: inset 0 0 30px rgba(74, 144, 226, 0.15);
+}
+.active-scanner .byte-scanner-img { filter: drop-shadow(0 0 10px rgba(74, 144, 226, 0.4)); }
+.scanner-screen.active-scanner {
+    border-color: #4a90e2;
+    cursor: default; /* Kills the click pointer since intro is over */
+}
+.scanner-screen.active-scanner h4 { color: #4a90e2; }
+.scanner-screen.active-scanner #scanner-text { color: #cce0ff; }
+.active-scanner .typewriter-container::after { color: #4a90e2; }
+
+
+/* =========================================
+   PAGE 5: JUNGLEDATE SPECIFICS
+   ========================================= */
+
+.page5-bg {
+    background-image: url('media/jungledate.png');
+}
+
+/* --- FIX 2: App interface covers the whole template box --- */
+.glass-panel {
+    position: absolute !important;
+    top: 0 !important; 
+    left: 0 !important;
+    width: 100% !important; 
+    height: 100% !important;
+    transform: none !important;
+    background: rgba(12, 24, 12, 0.85); /* Matches JungleMail's dark aesthetic */
+    backdrop-filter: blur(10px);
+    border: none !important; 
+    border-radius: 0 !important;
+    color: #e0eee0;
+    font-family: Arial, Helvetica, sans-serif;
+    display: none; 
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    box-sizing: border-box;
+}
+
+.glass-panel.active-screen {
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+}
+
+/* Keeps content centered in the full-screen panels */
+.centered-panel {
+    justify-content: center; 
+    align-items: center; 
+    text-align: center;
+}
+
+/* --- Screen 1: Radar --- */
+.subtitle { color: #80a080; margin-bottom: 30px; }
+.radar-options { display: flex; flex-direction: column; gap: 15px; width: 400px; }
+.radar-btn { font-weight: bold; padding: 15px; }
+
+/* --- Screen 2: Match --- */
+.match-title { font-size: 40px; color: #ff4db8; letter-spacing: 5px; margin-bottom: 40px; text-shadow: 0 0 20px rgba(255, 77, 184, 0.6); }
+.match-avatars { display: flex; align-items: center; gap: 30px; }
+.avatar-wrapper { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.avatar-name { font-weight: bold; font-size: 18px; color: #fff; font-family: Arial, Helvetica, sans-serif; }
+.match-spark { font-size: 40px; animation: pulse 1s infinite; }
+
+/* --- FIX 1: Bulletproof CSS Heart Shape --- */
+.heart-avatar {
+    width: 150px !important; 
+    height: 150px !important;
+    object-fit: cover !important;
+    /* This pure CSS path creates a perfect 150x150 heart without needing HTML SVGs */
+    clip-path: path('M 75 145 C 75 145 10 95 10 45 C 10 20 30 5 50 5 C 65 5 75 15 75 15 C 75 15 85 5 100 5 C 120 5 140 20 140 45 C 140 95 75 145 75 145 Z') !important;
+    filter: drop-shadow(0 0 15px rgba(255, 77, 184, 0.5));
+}
+
+/* --- Screen 3: Chat UI --- */
+.full-panel { overflow: hidden; }
+
+.chat-header {
+    display: flex; align-items: center; gap: 15px;
+    padding: 20px; border-bottom: 1px solid rgba(74, 222, 128, 0.3);
+    background: rgba(5, 10, 5, 0.6);
+}
+.chat-header-avatar { width: 45px !important; height: 45px !important; border-radius: 50%; object-fit: cover; border: 2px solid #4ade80; }
+.status-dot { font-size: 12px; color: #4ade80; margin-top: 3px; display: block; font-family: Arial, sans-serif; }
+
+.chat-history {
+    flex-grow: 1; padding: 20px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 15px;
+}
+
+.system-msg { text-align: center; font-size: 11px; color: #80a080; text-transform: uppercase; letter-spacing: 1px; margin: 10px 0; font-family: Arial, sans-serif; }
+
+/* --- Screen 3: Chat UI --- */
+.full-panel { overflow: hidden; }
+
+.chat-header {
+    display: flex; align-items: center; gap: 15px;
+    padding: 20px; border-bottom: 1px solid rgba(74, 222, 128, 0.3);
+    background: rgba(5, 10, 5, 0.6);
+}
+.chat-header-avatar { width: 45px !important; height: 45px !important; border-radius: 50%; object-fit: cover; border: 2px solid #4ade80; }
+.status-dot { font-size: 12px; color: #4ade80; margin-top: 3px; display: block; font-family: Arial, sans-serif; }
+
+.chat-history {
+    flex-grow: 1; padding: 20px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 15px;
+}
+
+.system-msg { text-align: center; font-size: 11px; color: #80a080; text-transform: uppercase; letter-spacing: 1px; margin: 10px 0; font-family: Arial, sans-serif; }
+
+/* FIX 1: Tighter bubble width so text reads naturally */
+.chat-bubble {
+    max-width: 65%; 
+    padding: 12px 18px; border-radius: 18px; font-size: 15px; line-height: 1.5;
+    animation: cleanFade 0.3s ease-out forwards; font-family: Arial, sans-serif;
+}
+
+.chat-bubble.scammer { align-self: flex-start; background: rgba(255, 255, 255, 0.1); border-bottom-left-radius: 4px; }
+.chat-bubble.user { align-self: flex-end; background: #2d5a27; color: #fff; border-bottom-right-radius: 4px; }
+
+/* FIX 1: Lock the image size so it doesn't stretch across the bubble */
+.chat-bubble img.chat-photo { 
+    max-width: 280px; /* Prevents the image from getting massive */
+    width: 100%; 
+    height: auto; 
+    border-radius: 12px; 
+    margin-top: 10px; 
+    object-fit: cover; 
+}
+
+.chat-bubble audio { margin-top: 10px; height: 35px; outline: none; }
+
+.typing-indicator { align-self: flex-start; background: rgba(255, 255, 255, 0.1); padding: 10px 15px; border-radius: 18px; color: #80a080; font-style: italic; font-size: 13px; display: none; font-family: Arial, sans-serif;}
+
+/* FIX 2: Choices side-by-side in BLUE */
+.chat-choices { 
+    padding: 20px; 
+    background: rgba(5, 10, 5, 0.8); 
+    border-top: 1px solid rgba(74, 144, 226, 0.3); /* Blue border */
+    display: flex; 
+    flex-direction: row; /* Puts them side-by-side */
+    justify-content: center;
+    gap: 15px; 
+}
+
+.chat-choice-btn { 
+    flex: 1; /* Makes both buttons share the width equally */
+    background: rgba(74, 144, 226, 0.1); /* Blue background */
+    border: 1px solid #4a90e2; /* Blue border */
+    color: #cce0ff; /* Blue text */
+    padding: 12px 15px; 
+    border-radius: 12px; 
+    cursor: pointer; 
+    transition: all 0.2s; 
+    font-size: 14px; 
+    line-height: 1.4;
+    text-align: center; /* Center the text */
+    font-family: Arial, sans-serif; 
+}
+
+.chat-choice-btn:hover { 
+    background: rgba(74, 144, 226, 0.3); 
+    color: #fff; 
+    transform: translateY(-3px); /* Bounces up instead of shifting right */
+    box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+}
+
+/* --- FIX 3: Byte Chat UI Override (Matches Page 3 Exactly) --- */
+.byte-overlay-ui {
+    position: absolute; 
+    bottom: 50px;       /* Matches Page 3 placement */
+    right: 40px;        /* Matches Page 3 placement */
+    display: flex; 
+    flex-direction: row-reverse; /* Puts Byte on the right side */
+    align-items: flex-end; 
+    gap: 20px;
+    z-index: 300; 
+    opacity: 0; 
+    pointer-events: none; 
+    transition: all 0.4s ease; 
+    transform: translateY(30px);
+}
+.byte-overlay-ui.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+.byte-overlay-ui .byte-speech-bubble { 
+    background: rgba(12, 24, 12, 0.9); 
+    backdrop-filter: blur(30px); 
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.9);
+    border: 2px solid #3d7a37; 
+    border-radius: 8px;
+    padding: 20px;
+    padding-bottom: 35px; 
+    width: 420px; 
+    height: auto; 
+    min-height: 90px;
+    position: relative; 
+    overflow: visible;
+}
+
+.byte-overlay-ui .byte-profile { 
+    width: 80px; 
+    height: 80px;
+    border: 2px solid #2d5a27;
+    border-radius: 50%;
+    overflow: hidden;
+    background: rgba(12, 24, 12, 0.95);
+    box-shadow: 0 0 20px rgba(74, 222, 128, 0.3);
+    flex-shrink: 0;
+}
+
+.byte-overlay-ui .byte-profile img {
+    width: 160%; 
+    height: 160%;
+    object-fit: cover;
+    object-position: center 50%; 
+    margin-left: -30%; 
+}
+
+/* Forces Arial font into Byte's text boxes */
+.byte-overlay-ui #byte-hint-title {
+    font-family: Arial, Helvetica, sans-serif !important;
+    color: #4ade80; margin: 0 0 5px 0; text-transform: uppercase; font-size: 12px; letter-spacing: 2px;
+}
+.byte-overlay-ui #byte-hint-text {
+    font-family: Arial, Helvetica, sans-serif !important;
+    color: #e0eee0; font-size: 16px; line-height: 1.5; margin: 0;
+}
+.byte-overlay-ui .click-prompt {
+    font-family: Arial, Helvetica, sans-serif !important;
+    position: absolute; bottom: 12px; right: 15px; font-size: 11px; color: #4ade80; text-transform: uppercase; opacity: 0.6; margin: 0;
+}
+
+/* --- The Red Pulse Warning Overlay --- */
+#warning-overlay {
+    position: absolute !important; top: 0; left: 0; width: 100% !important; height: 100% !important;
+    background: rgba(255, 0, 0, 0.2); backdrop-filter: blur(8px);
+    z-index: 800; display: none; justify-content: center; align-items: center;
+    animation: pulseRedBg 1.5s infinite alternate;
+}
+#warning-overlay.show { display: flex; }
+
+.warning-box {
+    background: rgba(20, 0, 0, 0.95); border: 2px solid #ff3333; border-radius: 8px; width: 500px; padding: 40px; text-align: center; box-shadow: 0 0 40px rgba(255, 0, 0, 0.5); font-family: Arial, Helvetica, sans-serif;
+}
+#warning-title { color: #ff3333; margin-top: 0; letter-spacing: 2px; }
+#warning-text { color: #fff; line-height: 1.6; margin: 20px 0 30px 0; }
+
+@keyframes pulseRedBg { 0% { background: rgba(200, 0, 0, 0.1); } 100% { background: rgba(255, 0, 0, 0.3); } }
+
+/* Key 3 specifics */
+#jungle-key-3 {
+    position: absolute !important; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+    z-index: 1001; opacity: 0; pointer-events: none; transition: all 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+}
+#jungle-key-3.pop-in { opacity: 1; transform: translate(-50%, -50%) scale(2); }
+#jungle-key-3.fade-out-key { opacity: 0; transform: translate(-50%, -50%) scale(0.1); transition: all 2s ease-in-out; }
+.page5-body #byte-character { z-index: 1002; }
+.page5-body #dialogue-box { z-index: 1003; }
+
+/* =========================================
+   JUNGLEDATE: FLOATING BACKGROUND HEARTS
+   ========================================= */
+
+/* The container restricted to the glass panel */
+.floating-hearts {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0; /* Sits behind the text */
+    pointer-events: none; /* Ensures buttons are still clickable */
+    border-radius: 12px; /* Matches glass panel corner radius */
+}
+
+/* The Base Heart Shape (Square rotated 45deg) */
+.floating-hearts i {
+    position: absolute;
+    display: block;
+    width: 12px;  /* Adjust base size */
+    height: 12px;
+    background: rgba(255, 77, 184, 0.4); /* Pink with transparency for subtlety */
+    transform: rotate(45deg);
+    bottom: -50px; /* Start off-screen below */
+    animation: floatUp linear infinite;
+}
+
+/* The Circles on top to make it a heart */
+.floating-hearts i::before,
+.floating-hearts i::after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 12px;
+    height: 12px;
+    background: inherit;
+    border-radius: 50%;
+}
+.floating-hearts i::before { top: -6px; left: 0; }
+.floating-hearts i::after { top: 0; left: -6px; }
+
+/* The Floating Animation */
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) rotate(45deg) scale(0.8);
+        opacity: 0;
+    }
+    20% { opacity: 0.6; } /* Fade in */
+    80% { opacity: 0.6; } /* Stay visible */
+    100% {
+        transform: translateY(-500px) rotate(45deg) scale(1.2); /* Move up 500px */
+        opacity: 0; /* Fade out */
+    }
+}
+
+/* --- Randomized Positioning & Timing for Natural Effect --- */
+.floating-hearts i:nth-child(1) { left: 5%; animation-duration: 12s; animation-delay: 0s; }
+.floating-hearts i:nth-child(2) { left: 15%; animation-duration: 15s; animation-delay: 2s; scale: 0.7; background: rgba(255, 50, 50, 0.3); }
+.floating-hearts i:nth-child(3) { left: 25%; animation-duration: 10s; animation-delay: 4s; }
+.floating-hearts i:nth-child(4) { left: 35%; animation-duration: 18s; animation-delay: 1s; scale: 1.2; }
+.floating-hearts i:nth-child(5) { left: 45%; animation-duration: 14s; animation-delay: 3s; background: rgba(255, 50, 50, 0.3); }
+.floating-hearts i:nth-child(6) { left: 55%; animation-duration: 11s; animation-delay: 5s; }
+.floating-hearts i:nth-child(7) { left: 65%; animation-duration: 16s; animation-delay: 2.5s; scale: 0.9; }
+.floating-hearts i:nth-child(8) { left: 75%; animation-duration: 13s; animation-delay: 0.5s; background: rgba(255, 50, 50, 0.3); }
+.floating-hearts i:nth-child(9) { left: 85%; animation-duration: 19s; animation-delay: 4.5s; }
+.floating-hearts i:nth-child(10) { left: 92%; animation-duration: 10s; animation-delay: 1.5s; scale: 0.8; }
+.floating-hearts i:nth-child(11) { left: 10%; animation-duration: 22s; animation-delay: 6s; scale: 0.6; background: rgba(255, 100, 184, 0.3); }
+.floating-hearts i:nth-child(12) { left: 30%; animation-duration: 17s; animation-delay: 7s; }
+.floating-hearts i:nth-child(13) { left: 60%; animation-duration: 20s; animation-delay: 8s; scale: 1.3; }
+.floating-hearts i:nth-child(14) { left: 80%; animation-duration: 14s; animation-delay: 5.5s; background: rgba(255, 50, 50, 0.3); }
+.floating-hearts i:nth-child(15) { left: 50%; animation-duration: 25s; animation-delay: 2s; scale: 0.5; }
+
+/* =========================================
+   PAGE 5: MULTI-STAGE CHAT UPGRADES
+   ========================================= */
+
+/* Loading Screen Animations */
+.pulse-text { animation: pulsePrompt 1.5s infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* Suspect Image/Audio Hover States */
+.suspect-media {
+    cursor: help;
+    transition: all 0.3s ease;
+    border: 2px dashed transparent;
+    padding: 5px;
+    border-radius: 12px;
+    display: inline-block;
+}
+
+.suspect-media:hover {
+    border-color: #4ade80;
+    background: rgba(74, 222, 128, 0.1);
+    box-shadow: 0 0 15px rgba(74, 222, 128, 0.4);
+    transform: scale(1.02);
+}
+
+.chat-bubble .suspect {
+    font-weight: bold;
+    color: #ffffff;
+    border-bottom: 1px dashed #4ade80;
+    cursor: help;
+    transition: all 0.3s ease;
+}
+
+.chat-bubble .suspect:hover {
+    color: #4ade80;
+    text-shadow: 0 0 10px rgba(74, 222, 128, 0.8);
+    background: rgba(74, 222, 128, 0.1);
+}
+
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 15px;
+    background-color: #E5E5EA; /* Standard gray messenger bubble */
+    border-radius: 20px;
+    width: fit-content;
+    margin-bottom: 10px;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    background-color: #8E8E93;
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.dot:nth-child(1) { animation-delay: -0.32s; }
+.dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes bounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1); }
+}
+
+/* The Dark Grey Bubble */
+.typing-indicator {
+    background-color: #555555; /* Darker grey background */
+    padding: 12px 18px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    width: fit-content;
+    margin-bottom: 10px;
+}
+
+/* The White Dots */
+.typing-indicator .dot {
+    width: 7px;
+    height: 7px;
+    background-color: #ffffff; /* White dots */
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+/* Staggering the animation so they bounce one after another */
+.typing-indicator .dot:nth-child(1) { animation-delay: -0.32s; }
+.typing-indicator .dot:nth-child(2) { animation-delay: -0.16s; }
+
+/* The actual bounce animation */
+@keyframes bounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1); }
+}
+
+
+
+#byte-hint-text {
+    height: 95px; /* Locks the container height permanently */
+    display: block;
+    /* Optional: add a little padding if the text touches the edges */
+    padding-bottom: 10px; 
+}
+
+/* Container for the animation */
+#key-anim-container {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 100;
+    pointer-events: none; /* Prevents blocking clicks */
+}
+
+/* Individual Fragments */
+.key-frag {
+    position: absolute;
+    width: 100px; /* Adjust based on your image size */
+    transition: all 1.2s cubic-bezier(0.42, 0, 0.05, 1);
+    opacity: 0;
+}
+.key-frag.show-frag { opacity: 1; }
+
+/* Starting position, size, and rotation for Key 1 */
+.frag-1 { 
+    top: 15%;         /* Moves it up or down (0% is top, 100% is bottom) */
+    left: 20%;        /* Moves it left or right */
+    width: 100px;     /* Changes the specific size of this fragment */
+    transform: rotate(-15deg); /* Optional: Gives it a slight tilt */
+}
+
+/* Starting position, size, and rotation for Key 2 */
+.frag-2 { 
+    top: 15%; 
+    right: 20%;       /* Anchors it to the right side of the screen */
+    width: 100px; 
+    transform: rotate(20deg); 
+}
+
+/* Starting position, size, and rotation for Key 3 */
+.frag-3 { 
+    bottom: 25%;      /* Anchors it to the bottom */
+    left: 50%;        /* Moves it to the middle... */
+    width: 100px; 
+    
+    /* Notice: translateX(-50%) is required here to keep it perfectly centered. 
+       Add your rotation or scale AFTER the translateX! */
+    transform: translateX(-50%) rotate(0deg); 
+}
+
+/* The Center Merge Transformation */
+.key-frag.merge-center {
+    top: 45%; 
+    left: 50%; 
+    transform: translate(-50%, -50%) rotate(360deg) scale(0.2);
+    opacity: 0;
+}
+
+/* The White Flash */
+#white-flash {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: white;
+    opacity: 0;
+    z-index: 105;
+    transition: opacity 0.4s ease;
+}
+#white-flash.flash-active { opacity: 1; }
+
+/* The Final Merged Key */
+#merged-key {
+    position: absolute;
+    top: 45%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+    z-index: 102;
+    transition: all 1.5s ease;
+    width: 250px;
+    filter: drop-shadow(0px 0px 30px rgba(255, 215, 0, 0.8)); /* Golden glow */
+}
+#merged-key.show-merged {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Byte's Exit Animation */
+#byte-character.walk-out {
+    left: 120% !important; /* Smoothly slides him back out to the right */
+    transition: left 1.5s ease-in-out !important;
+}
+
+/* The Glitchwood Exit Button (Matching .choice-btn style) */
+#glitchwood-exit-btn {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    bottom: 70px; /* Keeps it neatly at the bottom of the frame */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    
+    /* Exact Blue Palette from your choice-btn */
+    background: rgba(20, 40, 80, 0.8) !important; 
+    border: 1px solid #4a90e2 !important;        
+    color: #e0f0ff !important;                   
+    
+    /* Proper Scale and Typography */
+    min-width: 220px !important;
+    padding: 12px 20px !important;
+    text-align: center !important;
+    border-radius: 4px !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 15px !important;
+    font-weight: bold !important;
+    
+    cursor: pointer !important;
+    transition: opacity 1s ease, transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+#glitchwood-exit-btn.show-btn {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Exact Hover Effect from your choice-btn */
+#glitchwood-exit-btn:hover {
+    background: rgba(74, 144, 226, 0.5) !important;
+    border-color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4) !important;
+    
+    /* MUST include translateX(-50%) so it doesn't fly to the left when it bounces up */
+    transform: translateX(-50%) translateY(-2px) !important; 
+}
+
+/* 1. Ensure the main template traps the video inside */
+.page5-body .frame {
+    position: relative;
+    overflow: hidden;
+}
+
+/* 2. Make the video container fill 100% of the frame */
+#ending-video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999; /* Forces it above the jungle background and Byte */
+    background-color: #000; /* Black background so nothing bleeds through */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease; /* Quick fade in */
+}
+
+#ending-video-container.show-video {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 3. The magic property that makes the video scale seamlessly */
+#ending-video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Stretches the video to fill the box without black bars */
+}
+
+/* Makes the button smaller and pushes it lower in the frame */
+.small-lower-btn {
+    padding: 8px 20px;
+    font-size: 14px;
+    position: absolute;
+    bottom: 20px; /* Pushes it near the bottom of your frame */
+    left: 50%;
+    transform: translateX(-50%); /* Keeps it perfectly centered */
+    z-index: 10;
+}
+
+/* Fixes the hover transform fighting with the centering transform */
+.small-lower-btn:hover {
+    transform: translateX(-50%) translateY(-2px); 
+}
+

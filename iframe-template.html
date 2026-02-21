@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)https://fmscmd.com/xdlab/imda/iframe-template.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+        <!-- change the title accordingly-->
+        <title>Ethnan's Interactive Story</title>
+        
+        <style>
+            body{
+                margin:0;
+                padding:0;
+                width:100vw;
+                height:100vh;
+                display:flex;
+                justify-content: center;
+                align-items: center;
+                background:#F0F0F0;
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                overflow:hidden;
+            }
+            #overlay{
+                background:rgba(0,0,0,0.6);
+                width:100vw;
+                height:100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position:absolute;
+                top:-100vh;
+            }
+            #overlay div{
+                text-align: center;
+                color: whitesmoke;
+            }
+            
+            iframe{
+                width: 960px;
+                height: 540px;
+                aspect-ratio: 16/9;
+                border:none;
+                background-color: aliceblue;
+                overflow:hidden;
+            }
+
+             @media only screen 
+            and (min-device-width: 375px) 
+            and (orientation: portrait) { 
+               /*show rotate overlay icon*/
+                #overlay {
+                    top:0;
+                }
+            }
+            @media only screen 
+            and (max-width: 767px) and (orientation: landscape) { 
+                #container{
+                    transform:scale(.6);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="overlay"><div><svg fill="#ffffff" width="150" height="150" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 214.367 214.367" xml:space="preserve">
+       <path d="M202.403,95.22c0,46.312-33.237,85.002-77.109,93.484v25.663l-69.76-40l69.76-40v23.494
+           c27.176-7.87,47.109-32.964,47.109-62.642c0-35.962-29.258-65.22-65.22-65.22s-65.22,29.258-65.22,65.22
+           c0,9.686,2.068,19.001,6.148,27.688l-27.154,12.754c-5.968-12.707-8.994-26.313-8.994-40.441C11.964,42.716,54.68,0,107.184,0
+           S202.403,42.716,202.403,95.22z"></path>
+       </svg><h1>Please rotate your screen</h1></div></div>
+       <!-- rename your homepage or update the src below --> 
+       <div id="container"><iframe src="page1.html"></iframe></div>
+    
+</body></html>

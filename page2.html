@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+        <title>Glitchwood</title>
+        <link rel="stylesheet" href="styles.css">   
+    </head>
+
+<body class="fade-in-page">
+        <div class="bg-image page2-bg"></div>
+
+        <div class="frame">
+            
+            <img src="media/glitchwood.png" class="full-frame-img">
+
+            <div id="not-ready-popup">You're not there yet!</div>
+
+            <img src="media/Byte/neutral.png" id="byte-character" alt="Byte">
+
+            <div id="map-container">
+                <img src="media/map.png" id="game-map" alt="Jungle Map">
+                
+                <div class="app-pin" id="pin-mail" style="--top: 45%; --left: 21%;">
+                    <img src="media/mail.png" alt="Mail">
+                    <span>JungleMail</span>
+                </div>
+
+                <div class="app-pin locked" id="pin-dating" style="--top: 59%; --left: 78%;">
+                    <img src="media/dating.png" alt="Dating">
+                    <span>JungleDate</span>
+                </div>
+
+                <div class="app-pin locked" id="pin-social" style="--top: 69%; --left: 52%;">
+                    <img src="media/social.png" alt="Social">
+                    <span>JungleGram</span>
+                </div>
+            </div> <div id="byte-map-ui">
+                <div class="byte-profile">
+                    <img src="media/byte/happy.png" alt="Byte Happy">
+                </div>
+        
+                <div class="byte-speech-bubble" id="map-dialogue-trigger">
+                    <h3 class="char-name">Byte the JungleKeeper</h3>
+                    <p id="byte-map-text"></p>
+                    <span class="map-click-hint">Click to continue...</span>
+                </div>
+            </div>
+
+
+            <div id="dialogue-box">
+                <h3 class="char-name">Byte the JungleKeeper</h3>
+                <p class="char-text" id="typewriter-text"></p>
+            
+                <div id="options-container">
+                    <button class="choice-btn initial-choice" id="btn-1">I don't know...</button>
+                    <button class="choice-btn initial-choice" id="btn-2">I got sucked in!</button>
+                    <button class="choice-btn" id="btn-yes" style="display: none;">Yes!</button>
+                </div>
+
+                <span class="click-prompt" id="click-prompt">Click to continue...</span>
+            </div> </div> <script src="script.js"></script>
+
+            <div id="transition-overlay"></div>
+    </body>
+    <script src="audio.js"></script>
+</html>

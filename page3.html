@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glitchwood - JungleMail</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="fade-in-page page3-body">
+    
+    <div class="bg-image page3-bg"></div>
+
+    <div class="frame">
+        <img src="media/junglemail.png" class="full-frame-img" alt="JungleMail Environment">
+        
+        <div id="map-container">
+            <img src="media/map.png" id="game-map" alt="Jungle Map">
+            
+            <img src="media/key/key1.png" id="map-key-fragment" class="key-on-map" alt="Key Fragment">
+            
+            <div class="app-pin completed" id="pin-mail" style="--top: 45%; --left: 21%;">
+                <img src="media/mail.png" alt="Mail">
+                <span style="color: #4ade80;">JungleMail ✅</span>
+            </div>
+
+            <div class="app-pin locked" id="pin-dating" style="--top: 59%; --left: 78%;">
+                <img src="media/dating.png" alt="Dating">
+                <span>JungleDate </span>
+            </div>
+
+            <div class="app-pin" id="pin-social" style="--top: 69%; --left: 52%;">
+                <img src="media/social.png" alt="Social">
+                <span>JungleGram</span>
+            </div>
+        </div>
+
+        <div id="junglemail-app-container">
+            
+            <div id="email-sidebar">
+                <div class="sidebar-header">JUNGLEMAIL </div>
+                
+                <div class="email-item active" data-target="email-home">
+                    <span class="sender">Welcome</span>
+                    <span class="subject">JungleMail Homepage</span>
+                </div>
+
+                <div class="sidebar-divider">INBOX (2)</div>
+
+                <div class="email-item unread" data-target="email-1">
+                    <span class="sender">LinkedIn Talent</span>
+                    <span class="subject">Invitation: Remote Project Assi...</span>
+                </div>
+                
+                <div class="email-item unread" data-target="email-2">
+                    <span class="sender">Ngee Ann Poly Library</span>
+                    <span class="subject">Reminder: Library Book Due...</span>
+                </div>
+            </div>
+
+            <div id="email-main">
+
+                <div id="email-home" class="email-body active-email home-screen">
+                    <h1 class="jungle-title">JUNGLEMAIL</h1>
+                    <p class="jungle-subtitle">Select a message from your inbox</p>
+                </div>
+                
+                <div id="email-1" class="email-body">
+                    <div class="email-header">
+                        <div class="email-row"><span class="label">From:</span> LinkedIn Talent &lt;<span class="suspect" data-hint="hint-1">recruitment@linkedin-jobs.co</span>&gt;</div>
+                        <div class="email-row"><span class="label">Subject:</span> Invitation: Remote Project Assistant (Starting <span class="suspect" data-hint="hint-2">$4,500/mo</span>)</div>
+                    </div>
+                    <div class="email-content-text">
+                        <p>Dear User,</p>
+                        <p>We have reviewed your profile and believe your background is an excellent match for a remote Project Assistant role at our partner firm. This position offers flexible hours and a competitive starting salary.</p>
+                        <p>To move forward, please review the job description and fill out the initial screening form here:</p>
+                        <p><span class="suspect fake-link" data-hint="hint-3">[View & Apply]</span></p>
+                        <br>
+                        <p>Regards,<br>The Talent Acquisition Team</p>
+                    </div>
+                    <div class="email-actions">
+                        <button class="action-btn block-btn">BLOCK</button>
+                        <button class="action-btn proceed-btn">PROCEED</button>
+                    </div>
+                </div>
+
+                <div id="email-2" class="email-body">
+                   <div class="email-header">
+                        <div class="email-row"><span class="label">From:</span> Ngee Ann Poly Library &lt;<span class="suspect" data-hint="hint-4">no-reply@ngeeannpoly.edu.sg</span>&gt;</div>
+                        <div class="email-row"><span class="label">Subject:</span> Reminder: Library Book Due Soon</div>
+                    </div>
+                    <div class="email-content-text">
+                        <p>Dear Student,</p>
+                        <p>This is an automated reminder that the following item(s) are due back at the library <span class="suspect" data-hint="hint-5">in 2 days</span>:</p>
+                        <p><em>The History of Digital Singapore (Vol 1)</em></p>
+                        <p>If you wish to renew your items, please log into your student portal.</p>
+                        <p><a href="#" class="suspect real-link" data-hint="hint-6">https://portal.ngeeannpoly.edu.sg/renew</a></p>
+                        <br>
+                        <p>Thank you.</p>
+                    </div>
+                    <div class="email-actions">
+                        <button class="action-btn block-btn">BLOCK</button>
+                        <button class="action-btn proceed-btn">PROCEED</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="feedback-overlay">
+                <div id="feedback-popup">
+                    <h2 id="feedback-title">Result</h2>
+                    <p id="feedback-text">Feedback goes here.</p>
+                    <button id="feedback-close-btn">ACKNOWLEDGE</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="byte-map-ui">
+            <div class="byte-profile">
+                <img src="media/byte/happy.png" alt="Byte Happy">
+            </div>
+            <div class="byte-speech-bubble" id="map-dialogue-trigger">
+                <h3 class="char-name">Byte the JungleKeeper</h3>
+                <p id="byte-map-text"></p>
+                <span class="map-click-hint" id="byte-hint-text">Click to continue...</span>
+            </div>
+        </div>
+
+        <div id="victory-overlay">
+            <h1 class="victory-title">TRIAL COMPLETE</h1>
+            <p class="victory-subtitle">Fragment 1/3 Acquired</p>
+        </div>
+
+        <img src="media/key/key1.png" id="jungle-key-1" alt="Key Fragment">
+        <img src="media/Byte/neutral.png" id="byte-character" alt="Byte">
+
+        <div id="dialogue-box">
+            <h3 class="char-name">Byte the JungleKeeper</h3>
+            <p class="char-text" id="typewriter-text"></p>
+            
+            <div id="name-input-container">
+                <p>Enter your Explorer Name:</p>
+                <input type="text" id="explorer-name" placeholder="[ e.g., Utt ]" autocomplete="off">
+                <button id="confirm-name-btn" class="choice-btn">CONFIRM</button>
+            </div>
+
+            <span class="click-prompt" id="click-prompt">Click to continue...</span>
+        </div>
+
+        <div id="not-ready-popup">You're not there yet!</div>
+        <div id="transition-overlay"></div>
+
+    </div> <script src="page3.js"></script>
+    <script src="audio.js"></script>
+
+</body>
+</html>

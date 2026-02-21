@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glitchwood - JungleSocial</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="fade-in-page page4-body">
+    
+    <div class="bg-image page4-bg"></div>
+
+    <div class="frame">
+        <img src="media/junglesocial.png" class="full-frame-img" alt="JungleSocial Environment">
+        
+        <div id="map-container">
+            <img src="media/map.png" id="game-map" alt="Jungle Map">
+            
+           <img src="media/key/key1.png" id="map-key-fragment-1" class="key-on-map show" alt="Key 1">
+            <img src="media/key/key2.png" id="map-key-fragment-2" class="key-on-map" alt="Key 2">
+            
+            <div class="app-pin completed" id="pin-mail" style="--top: 45%; --left: 21%;">
+                <img src="media/mail.png" alt="Mail">
+                <span style="color: #4ade80;">JungleMail ✅</span>
+            </div>
+
+            <div class="app-pin" id="pin-dating" style="--top: 59%; --left: 78%;">
+                <img src="media/dating.png" alt="Dating">
+                <span>JungleDate</span>
+            </div>
+
+            <div class="app-pin completed" id="pin-social" style="--top: 69%; --left: 52%;">
+                <img src="media/social.png" alt="Social">
+                <span style="color: #4ade80;">JungleGram ✅</span>
+            </div>
+        </div>
+
+        <div id="transition-overlay"></div>
+
+        <div id="junglesocial-app-container">
+            
+            <div class="social-center-col" id="social-feed">
+                
+                <div class="post-card" id="post-1">
+                    <div class="post-header">
+                        <img src="media/profile2.png" class="post-avatar" alt="Daily Sentinel">
+                        <div class="post-author">
+                            <div class="author-top-line"><strong>The Daily 123</strong> <span class="sponsored">Sponsored</span></div>
+                            <span class="handle">@Daily123News</span>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>BREAKING: <span class="suspect-red hint-1">Swarms</span> of undocumented migrants are <span class="suspect-red hint-1">draining</span> our local economy and bringing <span class="suspect-red hint-1">unprecedented crime waves!</span> When will the authorities wake up?!</p>
+                        <img src="media/post1.png" class="post-image" alt="Sensational News">
+                    </div>
+                    <div class="post-actions">
+                        <button class="action-btn scan-btn">🔍 SCAN</button>
+                        <button class="action-btn flag-btn">FLAG</button>
+                        <button class="action-btn share-btn">SHARE</button>
+                    </div>
+                </div>
+
+                <div class="post-card" id="post-2">
+                    <div class="post-header">
+                        <img src="media/profile2.png" class="post-avatar" alt="NP Union">
+                        <div class="post-author">
+                            <div class="author-top-line"><strong>Ngee Ann Poly Student Union</strong> <img src="media/verified.png" class="verified-badge suspect-blue hint-2" alt="Verified"></div>
+                            <span class="handle">@NPSU_Official</span>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>Emergency Services Respond to Fire Alarm at NP Studio 3 During Student Production.</p>
+                        <p>At <span class="suspect-blue hint-2">14:00 hours</span> yesterday, a smoke machine malfunction during a horror short film shoot <span class="suspect-blue hint-2">triggered</span> the fire suppression system in Studio 3. The Assistant Director successfully <span class="suspect-blue hint-2">evacuated</span> the cast and crew. No injuries reported, but equipment <span class="suspect-blue hint-2">sustained</span> minor water damage. Building access remains restricted.</p>
+                        <img src="media/post2.png" class="post-image" alt="Campus News">
+                    </div>
+                    <div class="post-actions">
+                        <button class="action-btn scan-btn">🔍 SCAN</button>
+                        <button class="action-btn flag-btn">FLAG</button>
+                        <button class="action-btn share-btn">SHARE</button>
+                    </div>
+                </div>
+
+                <div class="post-card" id="post-3">
+                    <div class="post-header">
+                        <img src="media/profile2.png" class="post-avatar" alt="Grants">
+                        <div class="post-author">
+                            <div class="author-top-line"><strong>@SG_Student_Grants</strong></div>
+                            <span class="handle">@Gov_Relief_Update</span>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>Flash Payout! The Ministry of Education is giving a $500 digital relief credit to all polytechnic students. Claim yours before the portal closes at midnight! <span class="fake-blue-link">[Link]</span></p>
+                        <img src="media/post3.png" class="post-image" alt="Scam Relief">
+                    </div>
+                    
+                    <div class="comment-section">
+                        <div class="comment">
+                            <img src="media/profile2.png" alt="Bot 1">
+                            <div><strong>@PolyLife22</strong> Wow this actually worked! <span class="comment-timestamp suspect-red hint-3">Just now (12:00:01.045)</span></div>
+                        </div>
+                        <div class="comment">
+                            <img src="media/profile2.png" alt="Bot 2">
+                            <div><strong>@StudentSG</strong> Got my $500 in 5 mins! <span class="comment-timestamp suspect-red hint-3">Just now (12:00:01.045)</span></div>
+                        </div>
+                        <div class="comment">
+                            <img src="media/profile2.png" alt="Bot 3">
+                            <div><strong>@TechBro99</strong> Thanks for sharing! <span class="comment-timestamp suspect-red hint-3">Just now (12:00:01.045)</span></div>
+                        </div>
+                        
+                        <div class="hidden-comments" id="extra-comments" style="display: none;">
+                            <div class="comment">
+                                <img src="media/profile2.png" alt="Bot 4">
+                                <div><strong>@StudentPerks</strong> Easiest $500 ever! <span class="comment-timestamp suspect-red hint-3">Just now (12:00:01.045)</span></div>
+                            </div>
+                            <div class="comment">
+                                <img src="media/profile2.png" alt="Bot 5">
+                                <div><strong>@SG_Life</strong> Thank you MOE! <span class="comment-timestamp suspect-red hint-3">Just now (12:00:01.045)</span></div>
+                            </div>
+                            <div class="comment">
+                                <img src="media/profile2.png" alt="Bot 6">
+                                <div><strong>@PolyHacks</strong> Just claimed mine. <span class="comment-timestamp suspect-red hint-3">Just now (12:00:01.045)</span></div>
+                            </div>
+                        </div>
+                        
+                        <p class="more-comments" id="load-more-btn">View 47 more comments...</p>
+                    </div>
+
+                    <div class="post-actions">
+                        <button class="action-btn scan-btn">🔍 SCAN</button>
+                        <button class="action-btn flag-btn">FLAG</button>
+                        <button class="action-btn share-btn">SHARE</button>
+                    </div>
+                </div>
+                
+                <div style="height: 50px;"></div>
+            </div>
+
+            <div class="social-right-col">
+                <div class="scanner-module">
+                    <img src="media/Byte/neutral.png" class="byte-scanner-img" alt="Byte">
+                    <div class="scanner-screen" id="scanner-screen-area">
+                        <h4 id="scanner-title">BYTE THE JUNGLEKEEPER</h4>
+                        <div class="typewriter-container">
+                            <p id="scanner-text"></p>
+                        </div>
+                        <span class="scanner-click-prompt" id="scanner-prompt">Click to continue...</span>
+                    </div>
+                </div> </div> <div id="feedback-overlay">
+                <div id="feedback-popup">
+                    <h2 id="feedback-title">Result</h2>
+                    <p id="feedback-text">Feedback goes here.</p>
+                    <button id="feedback-close-btn">ACKNOWLEDGE</button>
+                </div>
+            </div>
+        </div> <div id="victory-overlay">
+            <h1 class="victory-title">TRIAL COMPLETE</h1>
+            <p class="victory-subtitle">Jungle Key Fragment 2/3 Acquired</p>
+        </div>
+        <img src="media/key/key2.png" id="jungle-key-2" alt="Key Fragment 2">
+        <img src="media/Byte/neutral.png" id="byte-character" alt="Byte">
+        <div id="dialogue-box">
+            <h3 class="char-name">Byte the JungleKeeper</h3>
+            <p class="char-text" id="typewriter-text"></p>
+            <span class="click-prompt" id="click-prompt">Click to continue...</span>
+        </div>
+
+    </div> <script src="page4.js"></script>
+    <script src="audio.js"></script>
+
+</body>
+</html>
